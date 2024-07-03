@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Hamster Rocket</title>
+  <link rel="shortcut icon" href="TemplateData/favicon.ico">
+  <link rel="stylesheet" href="TemplateData/style.css">
+</head>
+
+<body>
+  <div id="unity-container" style="width: 100%; height: 100%">
+    <canvas id="unity-canvas" width=auto height=auto></canvas>
+    <div id="unity-loading-bar">
+      <div id="unity-logo"></div>
+      <div id="unity-progress-bar-empty">
+        <div id="unity-progress-bar-full"></div>
+      </div>
+    </div>
+    
+    <!-- <script> -->
+      <!-- var Module = { -->
+        <!-- TOTAL_MEMORY: 16384000000, -->
+      <!-- }; -->
+    <!-- </script> -->
+
+    <!-- <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script> -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script> -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script> -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script> -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-functions.js"></script> -->
+
+    <script>
+      var container = document.querySelector("#unity-container");
+      var canvas = document.querySelector("#unity-canvas");
+      var loadingBar = document.querySelector("#unity-loading-bar");
+      var progressBarFull = document.querySelector("#unity-progress-bar-full");
+      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+      var warningBanner = document.querySelector("#unity-warning");
+      var unityMyInstance;
+	  
+      // Shows a temporary message banner/ribbon for a few seconds, or
+      // a permanent error message on top of the canvas if type=='error'.
+      // If type=='warning', a yellow highlight color is used.
+      // Modify or remove this function to customize the visually presented
+      // way that non-critical warnings and error messages are presented to the
+      // user.
+
+
+     <!-- const firebaseConfig = { -->
+    <!-- apiKey: "AIzaSyAdrZLX86bDFLq35r-ecIGzPPsYqC4QhVA", -->
+    <!-- authDomain: "prj-avatar-dev.firebaseapp.com", -->
+    <!-- projectId: "prj-avatar-dev", -->
+    <!-- storageBucket: "prj-avatar-dev.appspot.com", -->
+    <!-- messagingSenderId: "773424087435", -->
+    <!-- appId: "1:773424087435:web:67385c3dca71126a222f8e", -->
+    <!-- measurementId: "G-35Q5TRQZ82" -->
+  <!-- }; -->
+  <!-- const secondaryAppConfig = { -->
+    <!-- apiKey: "AIzaSyDUcZ36HL5SRfTvrZjksvALzX_xW6OV_DQ", -->
+    <!-- authDomain: "virtua-metaverse.firebaseapp.com", -->
+    <!-- databaseURL: "https://virtua-metaverse-default-rtdb.europe-west1.firebasedatabase.app", -->
+    <!-- projectId: "virtua-metaverse", -->
+    <!-- storageBucket: "virtua-metaverse.appspot.com", -->
+    <!-- messagingSenderId: "429591417637", -->
+    <!-- appId: "1:429591417637:web:5c28bf1b8b4b5aa18ec0cc", -->
+    <!-- measurementId: "G-JYSFZXWYZY" -->
+  <!-- }; -->
+
+      // Initialize Firebase
+      <!-- firebase.initializeApp(firebaseConfig); -->
+      <!-- const secondaryApp = firebase.initializeApp(secondaryAppConfig, "secondary"); -->
+      
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/Webgl.loader.js";
+      var config = {
+        dataUrl: buildUrl + "/Webgl.data.unityweb",
+        frameworkUrl: buildUrl + "/Webgl.framework.js.unityweb",
+        codeUrl: buildUrl + "/Webgl.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "TapGame",
+        productVersion: "0.1",
+      };
+// Resize canvas to maintain portrait orientation
+        function resizeCanvas() {
+            var containerWidth = container.clientWidth;
+            var containerHeight = container.clientHeight;
+            var aspectRatio = 9 / 16;
+
+            if (containerWidth / containerHeight > aspectRatio) {
+                canvas.style.width = (containerHeight * aspectRatio) + 'px';
+                canvas.style.height = containerHeight + 'px';
+            } else {
+                canvas.style.width = containerWidth + 'px';
+                canvas.style.height = (containerWidth / aspectRatio) + 'px';
+            }
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+		
+		 function showBanner(msg, type) {
+            function updateBannerVisibility() {
+                warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+            }
+            var div = document.createElement('div');
+            div.innerHTML = msg;
+            warningBanner.appendChild(div);
+            if (type == 'error') div.style = 'background: red; padding: 10px;';
+            else {
+                if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+                setTimeout(function () {
+                    warningBanner.removeChild(div);
+                    updateBannerVisibility();
+                }, 5000);
+            }
+            updateBannerVisibility();
+        }
+
+        var script = document.createElement("script");
+        script.src = loaderUrl;
+        script.onload = () => createUnityInstance(canvas, config, (progress) => {
+            progressBarFull.style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+            loadingBar.style.display = "none";
+        }).catch((message) => {
+            alert(message);
+        });
+        document.body.appendChild(script);
+		
+		
+		
+
+      <!-- if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) { -->
+        <!-- container.className = "unity-mobile"; -->
+        <!-- // Avoid draining fillrate performance on mobile devices, -->
+        <!-- // and default/override low DPI mode on mobile browsers. -->
+        <!-- config.devicePixelRatio = 1; -->
+        <!-- //  unityShowBanner('WebGL builds are not supported on mobile devices.'); -->
+      <!-- } else { -->
+        <!-- canvas.style.width = "100%"; -->
+        <!-- canvas.style.height = "100%"; -->
+      <!-- } -->
+      <!-- loadingBar.style.display = "block"; -->
+
+      <!-- var script = document.createElement("script"); -->
+      <!-- script.src = loaderUrl; -->
+      <!-- script.onload = () => { -->
+        <!-- createUnityInstance(canvas, config, (progress) => { -->
+          <!-- progressBarFull.style.width = 100 * progress + "%"; -->
+        <!-- }).then((unityInstance) => { -->
+          <!-- loadingBar.style.display = "none"; -->
+            <!-- window.unityInstance = unityInstance; -->
+            <!-- unityMyInstance = unityInstance; -->
+          <!-- //fullscreenButton.onclick = () => { -->
+          <!-- //  unityMyInstance.SetFullscreen(1); -->
+          <!-- // }; -->
+        <!-- }).catch((message) => { -->
+          <!-- alert(message); -->
+        <!-- }); -->
+      <!-- }; -->
+      <!-- document.body.appendChild(script); -->
+
+      <!-- function SetFull() { -->
+        <!-- console.log("going full Screen"); -->
+        <!-- unityMyInstance.SetFullscreen(1); -->
+      <!-- } -->
+
+    </script>
+</body>
+
+</html>
