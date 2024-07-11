@@ -39,12 +39,12 @@
       var fullscreenButton = document.querySelector("#unity-fullscreen-button");
       var warningBanner = document.querySelector("#unity-warning");
       var unityMyInstance;
-
-	if (window.Telegram.WebApp) {
+      if (window.Telegram && window.Telegram.WebApp) {
             window.Telegram.WebApp.expand();
             window.Telegram.WebApp.ready();
-        } 
-
+        } else {
+            window.location.href = "YOUR_GAME_URL";
+        }
 	    
       // Shows a temporary message banner/ribbon for a few seconds, or
       // a permanent error message on top of the canvas if type=='error'.
