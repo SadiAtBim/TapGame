@@ -39,12 +39,19 @@
       var fullscreenButton = document.querySelector("#unity-fullscreen-button");
       var warningBanner = document.querySelector("#unity-warning");
       var unityMyInstance;
-      if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.expand();
-            window.Telegram.WebApp.ready();
-        } 
-      
-      	
+
+	var currentURL = window.location.href;	    
+      document.addEventListener('DOMContentLoaded', function() {
+            // Check if running inside Telegram WebApp context
+            if (window.Telegram && window.Telegram.WebApp) {
+                // Expand the web app to full screen
+                window.Telegram.WebApp.expand();
+                window.Telegram.WebApp.ready();
+            } else {
+                // If not in Telegram context, redirect to the game URL
+                window.location.href = currentURL;
+            }
+        });
 	    
       // Shows a temporary message banner/ribbon for a few seconds, or
       // a permanent error message on top of the canvas if type=='error'.
